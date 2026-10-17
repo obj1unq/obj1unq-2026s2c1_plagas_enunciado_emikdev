@@ -1,7 +1,9 @@
 import src.elementos.elemento.*
 
-class Mascota inherits Elemento(esBueno = nivelDeSalud > 250){
+class Mascota inherits Elemento(){
 
     var nivelDeSalud = 0
+
+    override method esBueno() = nivelDeSalud > 250
 
 }

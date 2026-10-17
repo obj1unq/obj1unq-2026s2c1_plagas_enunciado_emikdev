@@ -1,11 +1,5 @@
 class Elemento {
 
-    var esBueno = false
-
-    method esBueno(){
-
-        return esBueno
-
-    }
+    method esBueno()
 
 }
