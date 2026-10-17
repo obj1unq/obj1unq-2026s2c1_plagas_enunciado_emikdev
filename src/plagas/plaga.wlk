@@ -6,5 +6,10 @@ class Plaga {
 
     method nivelDeDano()
     method transmiteEnfermedad() = poblacion > 10
+    method aumentarPoblacion(){
+
+        poblacion += poblacion*0.10
+
+    }
 
 }
