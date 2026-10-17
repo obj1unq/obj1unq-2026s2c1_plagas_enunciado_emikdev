@@ -11,5 +11,11 @@ class Plaga {
         poblacion += poblacion*0.10
 
     }
+    method atacar(elemento){
+
+        self.aumentarPoblacion()
+        elemento.recibirAtaque()
+
+    }
 
 }
