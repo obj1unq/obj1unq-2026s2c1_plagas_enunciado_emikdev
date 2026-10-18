@@ -1,0 +1,127 @@
+import src.elementos.hogar.*
+import src.elementos.huerta.*
+import src.elementos.mascota.*
+import src.plagas.cucarachas.*
+import src.plagas.pulgas.*
+
+describe "Tests de Elementos - Hogar" {
+
+  test "un hogar es bueno si su nivel de mugre es menor a la mitad del confort" {
+
+    const hogar = new Hogar(confort = 30, mugre = 10)
+    assert.that(hogar.esBueno())
+
+  }
+
+  test "un hogar es bueno si su nivel de mugre es exactamente la mitad del confort" {
+
+    const hogar = new Hogar(confort = 30, mugre = 15)
+    assert.that(hogar.esBueno())
+
+  }
+
+  test "un hogar no es bueno si su nivel de mugre supera la mitad del confort" {
+
+    const hogar = new Hogar(confort = 30, mugre = 16)
+    assert.notThat(hogar.esBueno())
+
+  }
+
+  test "al recibir un ataque, el nivel de mugre del hogar aumenta en el nivel de dano de la plaga" {
+
+    const hogar = new Hogar(confort = 40, mugre = 10)
+    const cucarachas = new Cucaracha(poblacion = 20, pesoPromedio = 8) // dano = 10
+    hogar.recibirAtaque(cucarachas)
+    assert.equals(20, hogar.mugre())
+
+  }
+
+}
+
+describe "Tests de Elementos - Huerta" {
+
+  test "una huerta es buena si su capacidad de produccion supera el nivel requerido" {
+
+    const huerta = new Huerta(produccionMensual = 120, nivelRequerido = 100)
+    assert.that(huerta.esBueno())
+
+  }
+
+  test "una huerta no es buena si su capacidad de produccion es igual al nivel requerido" {
+
+    const huerta = new Huerta(produccionMensual = 100, nivelRequerido = 100)
+    assert.notThat(huerta.esBueno())
+
+  }
+
+  test "una huerta no es buena si su capacidad de produccion es menor al nivel requerido" {
+
+    const huerta = new Huerta(produccionMensual = 80, nivelRequerido = 100)
+    assert.notThat(huerta.esBueno())
+
+  }
+
+  test "ataque de plaga que NO transmite enfermedades baja la produccion un 10% del dano" {
+
+    // Ejemplo del enunciado: dano 80 y no transmite enfermedades -> baja 8 unidades
+    const huerta = new Huerta(produccionMensual = 100, nivelRequerido = 50)
+    const cucarachas = new Cucaracha(poblacion = 160, pesoPromedio = 5) // dano = 80, no transmite porque peso < 10
+    huerta.recibirAtaque(cucarachas)
+    assert.equals(92, huerta.produccionMensual())
+
+  }
+
+  test "ataque de plaga que SI transmite enfermedades baja la produccion un 10% del dano mas 10 unidades adicionales" {
+
+    // Ejemplo del enunciado: dano 80 y transmite enfermedades -> baja 10% de 80 (8) + 10 = 18 unidades
+    const huerta = new Huerta(produccionMensual = 100, nivelRequerido = 50)
+    const cucarachas = new Cucaracha(poblacion = 160, pesoPromedio = 10) // dano = 80, transmite porque peso >= 10 y poblacion >= 10
+    huerta.recibirAtaque(cucarachas)
+    assert.equals(82, huerta.produccionMensual())
+
+  }
+
+}
+
+describe "Tests de Elementos - Mascota" {
+
+  test "una mascota es buena si su nivel de salud supera las 250 unidades" {
+
+    const mascota = new Mascota(nivelDeSalud = 251)
+    assert.that(mascota.esBueno())
+
+  }
+
+  test "una mascota no es buena si su nivel de salud es exactamente 250 unidades" {
+
+    const mascota = new Mascota(nivelDeSalud = 250)
+    assert.notThat(mascota.esBueno())
+
+  }
+
+  test "una mascota no es buena si su nivel de salud es menor a 250 unidades" {
+
+    const mascota = new Mascota(nivelDeSalud = 200)
+    assert.notThat(mascota.esBueno())
+
+  }
+
+  test "ataque de plaga que transmite enfermedades disminuye la salud de la mascota en el nivel de dano" {
+
+    const mascota = new Mascota(nivelDeSalud = 300)
+    const pulgas = new Pulga(poblacion = 25) // dano = 50, transmite enfermedades (poblacion >= 10)
+    mascota.recibirAtaque(pulgas)
+    assert.equals(250, mascota.nivelDeSalud())
+
+  }
+
+  test "ataque de plaga que NO transmite enfermedades no afecta la salud de la mascota" {
+
+    const mascota = new Mascota(nivelDeSalud = 300)
+    const pulgas = new Pulga(poblacion = 8) // dano = 16, no transmite (poblacion < 10)
+    mascota.recibirAtaque(pulgas)
+    assert.equals(300, mascota.nivelDeSalud())
+    
+  }
+
+}

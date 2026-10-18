@@ -1,0 +1,177 @@
+import src.plagas.cucarachas.*
+import src.plagas.pulgas.*
+import src.plagas.garrapatas.*
+import src.plagas.mosquitos.*
+import src.elementos.hogar.*
+import src.elementos.huerta.*
+import src.elementos.mascota.*
+
+describe "Tests de Plaga - Cucarachas" {
+
+  test "nivel de dano equivale a la mitad de su poblacion" {
+
+    const cucarachas = new Cucaracha(poblacion = 30, pesoPromedio = 8)
+    assert.equals(15, cucarachas.nivelDeDano())
+
+  }
+
+  test "transmite enfermedades si la poblacion es al menos 10 y el peso promedio es al menos 10" {
+
+    const cucarachas = new Cucaracha(poblacion = 10, pesoPromedio = 10)
+    assert.that(cucarachas.transmiteEnfermedad())
+
+  }
+
+  test "no transmite enfermedades si la poblacion es menor a 10 aunque el peso sea alto" {
+
+    const cucarachas = new Cucaracha(poblacion = 9, pesoPromedio = 12)
+    assert.notThat(cucarachas.transmiteEnfermedad())
+
+  }
+
+  test "no transmite enfermedades si el peso es menor a 10 aunque la poblacion sea alta" {
+
+    // Ejemplo del enunciado: 30 cucarachas que pesan en promedio 8 gramos
+    const cucarachas = new Cucaracha(poblacion = 30, pesoPromedio = 8)
+    assert.notThat(cucarachas.transmiteEnfermedad())
+
+  }
+
+  test "al atacar, la poblacion aumenta un 10% y el peso promedio aumenta 2 gramos" {
+
+    const cucarachas = new Cucaracha(poblacion = 30, pesoPromedio = 8)
+    const hogar = new Hogar(confort = 100, mugre = 0)
+    cucarachas.atacar(hogar)
+    assert.equals(33, cucarachas.poblacion())
+    assert.equals(10, cucarachas.pesoPromedio())
+
+  }
+
+}
+
+describe "Tests de Plaga - Pulgas" {
+
+  test "nivel de dano equivale al doble de su poblacion" {
+
+    const pulgas = new Pulga(poblacion = 15)
+    assert.equals(30, pulgas.nivelDeDano())
+
+  }
+
+  test "transmite enfermedades si la poblacion es al menos 10" {
+
+    const pulgas = new Pulga(poblacion = 10)
+    assert.that(pulgas.transmiteEnfermedad())
+
+  }
+
+  test "no transmite enfermedades si la poblacion es menor a 10" {
+
+    const pulgas = new Pulga(poblacion = 9)
+    assert.notThat(pulgas.transmiteEnfermedad())
+
+  }
+
+  test "al atacar, la poblacion aumenta un 10%" {
+
+    const pulgas = new Pulga(poblacion = 20)
+    const hogar = new Hogar(confort = 100, mugre = 0)
+    pulgas.atacar(hogar)
+    assert.equals(22, pulgas.poblacion())
+
+  }
+
+}
+
+describe "Tests de Plaga - Garrapatas" {
+
+  test "nivel de dano equivale al doble de su poblacion (igual que pulgas)" {
+
+    const garrapatas = new Garrapata(poblacion = 20)
+    assert.equals(40, garrapatas.nivelDeDano())
+
+  }
+
+  test "transmite enfermedades si la poblacion es al menos 10 (igual que pulgas)" {
+    
+    const garrapatas = new Garrapata(poblacion = 10)
+    assert.that(garrapatas.transmiteEnfermedad())
+
+  }
+
+  test "no transmite enfermedades si la poblacion es menor a 10 (igual que pulgas)" {
+
+    const garrapatas = new Garrapata(poblacion = 9)
+    assert.notThat(garrapatas.transmiteEnfermedad())
+
+  }
+
+  test "al atacar, la poblacion aumenta un 20% en lugar del 10%" {
+
+    const garrapatas = new Garrapata(poblacion = 20)
+    const hogar = new Hogar(confort = 100, mugre = 0)
+    garrapatas.atacar(hogar)
+    assert.equals(24, garrapatas.poblacion())
+
+  }
+
+}
+
+describe "Tests de Plaga - Mosquitos" {
+
+  test "nivel de dano equivale a la poblacion" {
+
+    const mosquitos = new Mosquito(poblacion = 50)
+    assert.equals(50, mosquitos.nivelDeDano())
+
+  }
+
+  test "transmite enfermedades si la poblacion es al menos 10 y es multiplo de 3" {
+
+    const mosquitos = new Mosquito(poblacion = 15)
+    assert.that(mosquitos.transmiteEnfermedad())
+
+  }
+
+  test "no transmite enfermedades si la poblacion no es multiplo de 3" {
+
+    const mosquitos = new Mosquito(poblacion = 20)
+    assert.notThat(mosquitos.transmiteEnfermedad())
+
+  }
+
+  test "no transmite enfermedades si la poblacion es menor a 10 aunque sea multiplo de 3" {
+
+    const mosquitos = new Mosquito(poblacion = 9)
+    assert.notThat(mosquitos.transmiteEnfermedad())
+
+  }
+
+  test "al atacar, la poblacion aumenta un 10%" {
+
+    const mosquitos = new Mosquito(poblacion = 50)
+    const hogar = new Hogar(confort = 100, mugre = 0)
+    mosquitos.atacar(hogar)
+    assert.equals(55, mosquitos.poblacion())
+
+  }
+
+}
+
+describe "Tests de Ataque Integrado" {
+
+  test "cuando una plaga ataca un elemento, se aplican los efectos sobre el elemento y sobre la plaga" {
+
+    const pulgas = new Pulga(poblacion = 20) // dano = 40, transmite enfermedades
+    const mascota = new Mascota(nivelDeSalud = 300)
+    pulgas.atacar(mascota)
+    
+    // El elemento recibe el ataque con el dano de la plaga (40): 300 - 40 = 260
+    assert.equals(260, mascota.nivelDeSalud())
+
+    // La plaga aumenta su poblacion en un 10%: 20 -> 22
+    assert.equals(22, pulgas.poblacion())
+
+  }
+
+}

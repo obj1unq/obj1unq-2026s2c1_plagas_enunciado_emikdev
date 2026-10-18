@@ -2,7 +2,12 @@ import src.elementos.*
 
 class Barrio {
 
-    var elementosDelBarrio = []
+    const elementosDelBarrio = []
+    method elementosDelBarrio() = elementosDelBarrio
+
+    method agregarElemento(unElemento) {
+        elementosDelBarrio.add(unElemento)
+    }
 
     method esCopado() {
       

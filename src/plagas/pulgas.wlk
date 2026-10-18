@@ -1,8 +1,7 @@
-import wollok.game.*
 import src.plagas.plaga.*
 
 class Pulga inherits Plaga(){
 
-    override method nivelDeDano() = poblacion/2
+    override method nivelDeDano() = poblacion * 2
 
 }

@@ -1,0 +1,64 @@
+import src.barrios.barrio.*
+import src.elementos.hogar.*
+import src.elementos.huerta.*
+import src.elementos.mascota.*
+
+describe "Tests de Barrio" {
+
+  test "un barrio es copado si tiene mas elementos buenos que no buenos (ejemplo del enunciado: 5 buenos y 2 no)" {
+
+    const hogarBueno1 = new Hogar(confort = 20, mugre = 5)
+    const hogarBueno2 = new Hogar(confort = 30, mugre = 10)
+    const huertaBuena = new Huerta(produccionMensual = 100, nivelRequerido = 50)
+    const mascotaBuena1 = new Mascota(nivelDeSalud = 300)
+    const mascotaBuena2 = new Mascota(nivelDeSalud = 260)
+    const hogarMalo = new Hogar(confort = 20, mugre = 15)
+    const mascotaMala = new Mascota(nivelDeSalud = 100)
+
+    const barrio = new Barrio(elementosDelBarrio = [ hogarBueno1, hogarBueno2, huertaBuena, mascotaBuena1, mascotaBuena2, hogarMalo, mascotaMala ])
+
+    assert.that(barrio.esCopado())
+
+  }
+
+  test "un barrio no es copado si tiene menos elementos buenos que no buenos (ejemplo del enunciado: 3 buenos y 4 no)" {
+
+    const hogarBueno1 = new Hogar(confort = 20, mugre = 5)
+    const huertaBuena = new Huerta(produccionMensual = 100, nivelRequerido = 50)
+    const mascotaBuena = new Mascota(nivelDeSalud = 300)
+
+    const hogarMalo1 = new Hogar(confort = 20, mugre = 15)
+    const hogarMalo2 = new Hogar(confort = 10, mugre = 8)
+    const huertaMala = new Huerta(produccionMensual = 30, nivelRequerido = 50)
+    const mascotaMala = new Mascota(nivelDeSalud = 100)
+
+    const barrio = new Barrio(elementosDelBarrio = [ hogarBueno1, huertaBuena, mascotaBuena, hogarMalo1, hogarMalo2, huertaMala, mascotaMala ])
+
+    assert.notThat(barrio.esCopado())
+
+  }
+
+  test "un barrio no es copado si tiene la misma cantidad de elementos buenos y no buenos" {
+
+    const hogarBueno = new Hogar(confort = 20, mugre = 5)
+    const mascotaBuena = new Mascota(nivelDeSalud = 300)
+    const hogarMalo = new Hogar(confort = 20, mugre = 15)
+    const mascotaMala = new Mascota(nivelDeSalud = 100)
+
+    const barrio = new Barrio(elementosDelBarrio = [ hogarBueno, mascotaBuena, hogarMalo, mascotaMala ])
+
+    assert.notThat(barrio.esCopado())
+
+  }
+
+  test "se pueden agregar elementos a un barrio con agregarElemento" {
+
+    const barrio = new Barrio()
+    const hogarBueno = new Hogar(confort = 20, mugre = 5)
+    barrio.agregarElemento(hogarBueno)
+
+    assert.that(barrio.esCopado())
+    
+  }
+
+}
